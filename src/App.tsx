@@ -7,7 +7,7 @@ import ModelDetails from './pages/ModelDetailsPage';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/uml-dataset-website">
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />

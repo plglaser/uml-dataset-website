@@ -13,7 +13,7 @@ export default function ModelDetails() {
     const [descOpen, setDescOpen] = useState(false);
 
     useEffect(() => {
-        fetch("/models/models.json")
+        fetch("./models/models.json")
         .then((res) => res.json())
         .then((data: Model[]) => {
             const found = data.find(

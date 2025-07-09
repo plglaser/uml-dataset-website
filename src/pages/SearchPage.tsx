@@ -9,7 +9,7 @@ export default function SearchPage() {
     const [query, setQuery] = useState("");
 
     useEffect(() => {
-        fetch("/models/models.json")
+        fetch("./models/models.json")
             .then((res) => res.json())
             .then((data) => {
                 setModels(data);

@@ -7,7 +7,7 @@ export default function LandingPage() {
     const [models, setModels] = useState<Model[]>([]);
     
     useEffect(() => {
-        fetch("/models/models.json")
+        fetch("./models/models.json")
             .then((res) => res.json())
             .then((data) => setModels(data))
         }, []);
