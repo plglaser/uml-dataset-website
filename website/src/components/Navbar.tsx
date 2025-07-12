@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "./ui/navigation-menu";
-import { Github, Home, Search } from "lucide-react";
+import { Github, Home, Search, Send } from "lucide-react";
 
 const NAV_ITEMS = [
     {
@@ -34,6 +34,20 @@ export default function Navbar() {
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                         ))}
+                        {/* Submit Button */}
+                        <NavigationMenuItem>
+                            <NavigationMenuLink asChild>
+                                <a
+                                    href="https://forms.gle/Y4QmXKC5DueQE9u99"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1 rounded-md px-3 py-2 font-medium transition-colors text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                                >
+                                    <Send size={18} />
+                                    Submit
+                                </a>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
                 <a

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Model } from "@/interfaces/model";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Download } from "lucide-react";
 
 export default function ModelDetails() {
     const { name } = useParams<{ name: string }>();
@@ -49,7 +49,18 @@ export default function ModelDetails() {
                     &larr; Back
                 </Button>
                 <div className="rounded-xl shadow p-8 flex flex-col gap-6 bg-white">
-                    <h2 className="text-3xl font-bold">{model.name}</h2>
+                    <div className="flex items-center justify-between gap-4 mb-2">
+                        <h2 className="text-3xl font-bold">{model.name}</h2>
+                        <a
+                            href={`${import.meta.env.BASE_URL}models/${encodeURIComponent(model.name)}.zip`}
+                            download
+                        >
+                            <Button variant="outline" className="flex items-center gap-2 cursor-pointer">
+                                <Download size={16} />
+                                Download
+                            </Button>
+                        </a>
+                    </div>
                     
                     {/* Elements & Relationships */}
                     <div className="flex flex-wrap gap-4 text-md text-gray-700">
@@ -67,6 +78,11 @@ export default function ModelDetails() {
                         {model.hasAggregation && (
                             <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded">
                                 Aggregation
+                            </span>
+                        )}
+                        {model.hasExtraMaterial && (
+                            <span className="text-xs bg-gray-500 text-green-700 px-2 py-0.5 rounded">
+                                Extra Material
                             </span>
                         )}
                     </div>

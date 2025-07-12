@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from "node:path";
 import { fileURLToPath } from 'node:url';
 import plantUMLParser from 'plantuml-parser';
+import AdmZip from 'adm-zip';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,6 +53,8 @@ function getModelData(folderPath, folderName) {
     const plantumlPath = path.join(folderPath, 'plantuml.txt');
     const descriptionPath = path.join(folderPath, 'description.md');
     const metadataPath = path.join(folderPath, 'metadata.txt');
+    const extraMaterialPath = path.join(folderPath, 'extramaterial');
+
     if (!fs.existsSync(plantumlPath)) return null;
 
     const parsed = parsePlantUML(plantumlPath);
@@ -61,12 +64,14 @@ function getModelData(folderPath, folderName) {
     const relationshipCount = elements.filter(e => e instanceof plantUMLParser.Relationship).length
     const metadata = parseMetadata(metadataPath);
     const umlConcepts = checkUmlConcepts(elements);
+    const hasExtraMaterial = fs.existsSync(extraMaterialPath) && fs.statSync(extraMaterialPath).isDirectory();
 
     return {
         name: folderName,
         description: getDescription(descriptionPath),
         elementCount,
         relationshipCount,
+        hasExtraMaterial,
         ...umlConcepts,
         ...metadata
     };
@@ -115,6 +120,17 @@ function copyAllModelFiles(modelFolders) {
     }
 }
 
+function zipModelFiles() {
+    fs.readdirSync(MODELS_DIR).forEach(modelName => {
+        const modelPath = path.join(MODELS_DIR, modelName);
+        if (fs.statSync(modelPath).isDirectory()) {
+          const zip = new AdmZip();
+          zip.addLocalFolder(modelPath);
+          zip.writeZip(path.join(MODELS_DIR, `${modelName}.zip`));
+        }
+    });
+}
+
 // TODO: Add validation
 function main() {
     if (!fs.existsSync(MODELS_DIR)) fs.mkdirSync(MODELS_DIR, { recursive: true });
@@ -132,6 +148,9 @@ function main() {
 
     copyAllModelFiles(modelFolders);
     console.log(`Copied all model files to ${MODELS_DIR}`);
+
+    zipModelFiles();
+    console.log(`Zipped model files in ${MODELS_DIR}`);
 }
 
 main()

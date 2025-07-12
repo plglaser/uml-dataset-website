@@ -5,6 +5,7 @@ export interface Model {
     relationshipCount: number;
     hasComposition?: boolean;
     hasAggregation?: boolean;
+    hasExtraMaterial?: boolean;
     language: string
     domain: string[];
     tags: string[];

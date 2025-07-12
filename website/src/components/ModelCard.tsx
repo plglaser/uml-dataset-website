@@ -23,6 +23,11 @@ export function ModelCard({ model }: Readonly<{ model: Model }>) {
                         Aggregation
                     </span>
                 )}
+                {model.hasExtraMaterial && (
+                    <span className="text-xs bg-gray-500 text-white px-2 py-0.5 rounded">
+                        Extra Material
+                    </span>
+                )}
             </div>
             <div className="flex gap-2 text-xs text-gray-500 flex-wrap">
                 {model.language && (
@@ -42,12 +47,12 @@ export function ModelCard({ model }: Readonly<{ model: Model }>) {
                 )}
             </div>
             {model.source && (
-                <div className="text-xs text-gray-400 mt-1">
+                <div className="text-xs text-left text-gray-400 mt-1">
                     <span className="font-medium">Source: </span>{model.source}
                 </div>
             )}
             {model.description && (
-                <p className="text-gray-600 text-sm line-clamp-2">{model.description}</p>
+                <p className="text-gray-600 text-left text-xs line-clamp-2">{model.description}</p>
             )}
         </div>
     </Link>
