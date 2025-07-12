@@ -18,9 +18,9 @@ function getDirectories(srcPath) {
 
 function parsePlantUML(filePath) {
     let lines = fs.readFileSync(filePath, 'utf8').split('\n');
-    if (lines.length > 2) {
-        lines = lines.slice(1, -1); // Remove first and last line
-    }
+    // if (lines.length > 2) {
+    //     lines = lines.slice(1, -1); // Remove first and last line
+    // }
     const plantumlContent = lines.join('\n');
     return plantUMLParser.parse(plantumlContent);
 }
@@ -52,7 +52,7 @@ function checkUmlConcepts(elements) {
 }
 
 function getModelData(folderPath, folderName) {
-    const plantumlPath = path.join(folderPath, 'plantuml.md');
+    const plantumlPath = path.join(folderPath, 'plantuml.txt');
     const descriptionPath = path.join(folderPath, 'description.md');
     const metadataPath = path.join(folderPath, 'metadata.txt');
     if (!fs.existsSync(plantumlPath)) return null;
@@ -102,6 +102,7 @@ function main() {
     const models = [];
 
     for (const folder of modelFolders) {
+        console.log(folder)
         const folderPath = path.join(DATASET_DIR, folder);
         const data = getModelData(folderPath, folder);
         if (data) models.push(data);

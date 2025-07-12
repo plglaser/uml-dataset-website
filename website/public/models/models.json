@@ -222,6 +222,20 @@
     ]
   },
   {
+    "name": "University",
+    "description": "A university consists of several faculties, which are made up of various institutes. Each faculty and institute has a name. The address of each institute is known. \nEach faculty is headed by a dean, who is an employee of the university. \nThe total number of employees is known. Employees have a social security number, a name, and an email address. A distinction is made between research and administrative staff. \nResearch assistants (RA) are assigned to at least one institute. The field of research of each RA is known. In addition, RAs can be involved in projects for a certain number of hours, whereby the name, start and end dates of the projects are known. Some RAs teach courses. In this case, they are referred to as lecturers. \nCourses have a unique number (ID), a name and a weekly duration in hours.\n",
+    "elementCount": 9,
+    "relationshipCount": 9,
+    "hasComposition": true,
+    "hasAggregation": true,
+    "language": "English",
+    "tags": [],
+    "domain": [
+      "university management"
+    ],
+    "source": "TU Wien, Business Informatics Group"
+  },
+  {
     "name": "eHome2020",
     "description": "As a project manager of a medium-sized software company you are responsible for the successful implementation of the system described below. In the first 5 tasks of this exam you will produce a specification step-by-step.\nShort description:\nInfrastructure and software platform for capturing energy consumption data in private homes.\nThe customer:\nHomeTec is a small company in the domain of building engineering which manufactures sensors which can be installed in private homes. The company is, same as your company, located in Aachen. \nDetailed system description:\nThe system “E-Home-2020” consists of a set of multiple sensors, which report their values to a connected SensorController. Furthermore, the SensorController stores information about the apartment with its inhabitants. The apartment’s inhabitants can log on to the SensorController by using their username and password and query values for each installed sensor. Moreover, they can specify a threshold for each sensor. An external System called „E-Monitor“  is attached to the system and checks all thresholds for each sensor automatically. If the sensor’s threshold is exceeded and if an email address has been specified for the apartment, “E-Monitor” will send alert messages via the “E-Home-2020” system. \nSome inhabitants have administrative rights which enable them to configure sensors. This includes assigning sensors to a new room or changing the sensor’s description.\nAt the moment, the company HomeTec manufactures two types of sensors: temperature sensors and power sensors (the latter are installed in a plug-and-play fashion between the power-socket and the respective appliance). Temperature sensors have a valid value range (min , max). Power sensors store the total power consumption as counter reading. All sensors have a unique vendor-id, a description (e.g. “temperature radiator living room” or “power consumption microwave oven”) and a unit. Possible units are CELSIUS and WATT. Each sensor is assigned to exactly one room. An apartment has an address and consists of at least two rooms. Rooms have a description (e.g. „living room“). For each sensor one can query the respective measured values, which are stored in the system. Each value has a timestamp and the corresponding value as a floating point number. For quick access one can access the last value of a sensor directly.\nGoal of project:\nThe goal of the project is the development of a prototype, which works on a specific target platform in a specific environment and provides essential functionality.\n",
     "elementCount": 8,

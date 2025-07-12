@@ -1,4 +1,3 @@
-```plantuml
 @startuml
 
 enum Genre <<enum>> {
@@ -77,4 +76,3 @@ note "{XOR}" as N1
 N1..(Screenplay,Concept)
 
 @enduml
-```

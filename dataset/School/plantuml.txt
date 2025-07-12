@@ -1,4 +1,3 @@
-```plantuml
 @startuml
 
 abstract class Person {
@@ -48,4 +47,3 @@ Student "10..31"-o"1" ClassGroup
 ClassGroup "1"-"1" ClassRoom
 
 @enduml
-```

@@ -1,4 +1,3 @@
-```plantuml
 @startuml
 
 class ConcreteBasement {
@@ -66,4 +65,3 @@ SemiDetachedWithCarport "1"-"2" Carport
 SemiDetachedWithGarage "1"-"1" Garage
 
 @enduml
-```
