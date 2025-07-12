@@ -11,7 +11,7 @@ export default function LandingPage() {
         if (!baseUrl.endsWith("uml-dataset-website/")) {
             baseUrl += "uml-dataset-website/";
         }
-        fetch(`${baseUrl}models/models.json`)
+        fetch(`${baseUrl}models.json`)
             .then((res) => res.json())
             .then((data) => setModels(data))
         }, []);

@@ -7,8 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DATASET_DIR = path.resolve(__dirname, '../../dataset');
-const OUTPUT_DIR = path.resolve(__dirname, '../public/models');
-const OUTPUT_FILE = path.join(OUTPUT_DIR, 'models.json');
+const MODELS_DIR = path.resolve(__dirname, '../public/models');
+const OUTPUT_FILE = path.resolve(__dirname, '../public/models.json');
 
 function getDirectories(srcPath) {
     return fs.readdirSync(srcPath).filter((file) =>
@@ -18,9 +18,6 @@ function getDirectories(srcPath) {
 
 function parsePlantUML(filePath) {
     let lines = fs.readFileSync(filePath, 'utf8').split('\n');
-    // if (lines.length > 2) {
-    //     lines = lines.slice(1, -1); // Remove first and last line
-    // }
     const plantumlContent = lines.join('\n');
     return plantUMLParser.parse(plantumlContent);
 }
@@ -95,14 +92,36 @@ function parseMetadata(filePath) {
     return metadata;
 }
 
+// Recursively copy all files and folders from src to dest
+function copyRecursiveSync(src, dest) {
+    if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+    for (const entry of fs.readdirSync(src)) {
+        const srcPath = path.join(src, entry);
+        const destPath = path.join(dest, entry);
+        if (fs.statSync(srcPath).isDirectory()) {
+            copyRecursiveSync(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+}
+
+// Copies all files of each model into public/models/[modelName]
+function copyAllModelFiles(modelFolders) {
+    for (const folder of modelFolders) {
+        const src = path.join(DATASET_DIR, folder);
+        const dest = path.join(MODELS_DIR, folder);
+        copyRecursiveSync(src, dest);
+    }
+}
+
 // TODO: Add validation
 function main() {
-    if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    if (!fs.existsSync(MODELS_DIR)) fs.mkdirSync(MODELS_DIR, { recursive: true });
     const modelFolders = getDirectories(DATASET_DIR);
     const models = [];
 
     for (const folder of modelFolders) {
-        console.log(folder)
         const folderPath = path.join(DATASET_DIR, folder);
         const data = getModelData(folderPath, folder);
         if (data) models.push(data);
@@ -110,6 +129,9 @@ function main() {
 
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(models, null, 2));
     console.log(`Wrote ${models.length} models to ${OUTPUT_FILE}`);
+
+    copyAllModelFiles(modelFolders);
+    console.log(`Copied all model files to ${MODELS_DIR}`);
 }
 
 main()
