@@ -147,7 +147,7 @@ export default function ModelDetails() {
                         <div className="font-semibold mb-2">UML Diagram</div>
                         <div className="bg-gray-100 p-2 rounded flex items-center justify-center">
                             <img
-                                src={`${import.meta.env.BASE_URL}models/${encodeURIComponent(model.name)}/plantuml.png`}
+                                src={`${import.meta.env.BASE_URL}models/${encodeURIComponent(model.name)}/plantuml.svg`}
                                 alt={`PlantUML diagram for ${model.name}`}
                                 className="max-w-full rounded shadow"
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
