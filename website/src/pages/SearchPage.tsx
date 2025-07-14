@@ -18,9 +18,9 @@ export default function SearchPage() {
 
     useEffect(() => {
         let baseUrl = import.meta.env.BASE_URL;
-        if (!baseUrl.endsWith("uml-dataset-website/")) {
-            baseUrl += "uml-dataset-website/";
-        }
+        //if (!baseUrl.endsWith("uml-dataset-website/")) {
+        //    baseUrl += "uml-dataset-website/";
+        //}
         fetch(`${baseUrl}models.json`)
             .then((res) => res.json())
             .then((data) => {
