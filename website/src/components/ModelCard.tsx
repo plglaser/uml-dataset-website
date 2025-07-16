@@ -1,7 +1,7 @@
 import type { Model } from "@/interfaces/model";
 import { Link } from "react-router-dom";
 import { PROPERTY_BADGES } from "@/interfaces/properties";
-import { ArrowLeftRight, Box, Square } from "lucide-react";
+import { ArrowLeftRight, Box } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 
