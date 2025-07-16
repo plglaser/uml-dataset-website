@@ -6,7 +6,6 @@ import AdmZip from 'adm-zip';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const DATASET_DIR = path.resolve(__dirname, '../../dataset');
 const MODELS_DIR = path.resolve(__dirname, '../public/models');
 const OUTPUT_FILE = path.resolve(__dirname, '../public/models.json');
@@ -29,14 +28,18 @@ function getDescription(filePath) {
 }
 
 function checkUmlConcepts(elements) {
+    // concepts to check depending on arrow heads
     const concepts = [
         { property: 'hasComposition', symbols: ['*'] },
-        { property: 'hasAggregation', symbols: ['o'] }
-        // add more concepts here as needed
+        { property: 'hasAggregation', symbols: ['o'] },
+        { property: 'hasInheritance', symbols: ['<|', '|>']}
     ];
 
-    // Get only relationships
+    // Get elements by type
     const relationships = elements.filter(e => e instanceof plantUMLParser.Relationship);
+    const classes = elements.filter(e => e instanceof plantUMLParser.Class);
+    const classNames = new Set(classes.map(c => c.name));
+    const enums = elements.filter(e => e instanceof plantUMLParser.Enum);
 
     // Prepare result object
     const result = {};
@@ -46,7 +49,41 @@ function checkUmlConcepts(elements) {
             concept.symbols.includes(rel.rightArrowHead)
         );
     }
+
+    result.hasAbstract = classes.some(c => c.isAbstract === true);
+    result.hasEnumeration = enums.length > 0;
+    result.hasAttributes = classes.some(c =>
+        Array.isArray(c.members) &&
+        c.members.some(member => member instanceof plantUMLParser.MemberVariable)
+    );
+    result.hasMethods = classes.some(c =>
+        Array.isArray(c.members) &&
+        c.members.some(member => member instanceof plantUMLParser.Method)
+    );
+    result.hasAssociationClass = relationships.some(rel => {
+        const isDotted =
+            rel.leftArrowBody === '.' &&
+            rel.rightArrowBody === '.' &&
+            rel.leftArrowHead === '' &&
+            rel.rightArrowHead === '';
+        if (!isDotted) return false;
+
+        const leftNames = typeof rel.left === 'string' ? rel.left.split(',').map(s => s.trim()).filter(Boolean) : [];
+        const rightNames = typeof rel.right === 'string' ? rel.right.split(',').map(s => s.trim()).filter(Boolean) : [];
+        // At least one side refers to multiple classes AND all names exist as classes
+        return (
+            (allClassNames(classNames, rel.left) && allClassNames(classNames, rel.right)) && (leftNames.length > 1 || rightNames.length > 1)
+        );
+    });
     return result;
+}
+
+// Utility to check if all names are classes
+function allClassNames(classNames, str) {
+    if (typeof str !== 'string') return false;
+    const names = str.split(',').map(s => s.trim()).filter(Boolean);
+    // at least one name, and all names must be in classNames
+    return names.length > 0 && names.every(name => classNames.has(name));
 }
 
 function getModelData(folderPath, folderName) {
@@ -60,8 +97,8 @@ function getModelData(folderPath, folderName) {
     const parsed = parsePlantUML(plantumlPath);
     const elements = parsed.at(0).elements;
 
-    const elementCount = elements.filter(e => e instanceof plantUMLParser.Class).length
-    const relationshipCount = elements.filter(e => e instanceof plantUMLParser.Relationship).length
+    const classCount = elements.filter(e => e instanceof plantUMLParser.Class).length
+    const associationCount = elements.filter(e => e instanceof plantUMLParser.Relationship).length
     const metadata = parseMetadata(metadataPath);
     const umlConcepts = checkUmlConcepts(elements);
     const hasExtraMaterial = fs.existsSync(extraMaterialPath) && fs.statSync(extraMaterialPath).isDirectory();
@@ -69,8 +106,8 @@ function getModelData(folderPath, folderName) {
     return {
         name: folderName,
         description: getDescription(descriptionPath),
-        elementCount,
-        relationshipCount,
+        classCount,
+        associationCount,
         hasExtraMaterial,
         ...umlConcepts,
         ...metadata
@@ -131,7 +168,7 @@ function zipModelFiles() {
     });
 }
 
-// TODO: Add validation
+// TODO: Add validation?
 function main() {
     if (!fs.existsSync(MODELS_DIR)) fs.mkdirSync(MODELS_DIR, { recursive: true });
     const modelFolders = getDirectories(DATASET_DIR);

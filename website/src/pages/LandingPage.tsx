@@ -23,7 +23,7 @@ export default function LandingPage() {
                     Golden UML ModelSet
                 </h1>
                 <p className="text-base text-gray-700 mb-2 text-center">
-                    The <span className="font-bold">Golden UML modelset</span> is a community-curated dataset of UML modeling exercises for education.
+                    The <span className="font-bold">Golden UML ModelSet</span> is a community-curated dataset of UML modeling exercises for education.
                 </p>
                 <p className="text-base text-gray-700 mb-6 text-center">
                     Currently there are <span className="font-bold">{models.length} total models</span> available.

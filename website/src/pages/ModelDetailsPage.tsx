@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import type { Model } from "@/interfaces/model";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp, Download } from "lucide-react";
+import { ArrowLeftRight, Box, ChevronDown, ChevronUp, Download } from "lucide-react";
+import { PROPERTY_BADGES } from "@/interfaces/properties";
+import { Separator } from "@/components/ui/separator";
 
 export default function ModelDetails() {
     const { name } = useParams<{ name: string }>();
@@ -61,30 +63,32 @@ export default function ModelDetails() {
                             </Button>
                         </a>
                     </div>
+                    <Separator />
                     
                     {/* Elements & Relationships */}
                     <div className="flex flex-wrap gap-4 text-md text-gray-700">
-                        <span>
-                            <span className="font-semibold">{model.elementCount}</span> elements
+                        <span className="flex items-center gap-1 font-semibold text-sm text-gray-700">
+                            <Box className="w-4 h-4 text-blue-500" strokeWidth={2.2} />
+                            <span className="font-bold">{model.classCount}</span> Classes
                         </span>
-                        <span>
-                            <span className="font-semibold">{model.relationshipCount}</span> relationships
+                        <span className="flex items-center gap-1 font-semibold text-sm text-gray-700">
+                            <ArrowLeftRight className="w-4 h-4 text-emerald-500" strokeWidth={2.2} />
+                            <span className="font-bold">{model.associationCount}</span> Associations
                         </span>
-                        {model.hasComposition && (
-                            <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
-                                Composition
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 text-xs">
+                    {PROPERTY_BADGES.map(
+                        ({ key, label, color }) => model[key] && (
+                            <span
+                            key={key}
+                            className={`px-2 py-0.5 rounded font-medium ${color}`}
+                            title={label}
+                            >
+                            {label}
                             </span>
-                        )}
-                        {model.hasAggregation && (
-                            <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded">
-                                Aggregation
-                            </span>
-                        )}
-                        {model.hasExtraMaterial && (
-                            <span className="text-xs bg-gray-500 text-green-700 px-2 py-0.5 rounded">
-                                Extra Material
-                            </span>
-                        )}
+                        )
+                    )}
                     </div>
                     
                     {/* Language, Domain, Tags */}
@@ -114,7 +118,7 @@ export default function ModelDetails() {
                             <span className="font-medium">Source:</span> {model.source}
                         </div>
                     )}
-
+                    <Separator />
                     {/* Description (collapsible) */}
                     {model.description && (
                         <Collapsible open={descOpen} onOpenChange={setDescOpen}>
@@ -141,7 +145,7 @@ export default function ModelDetails() {
                             </CollapsibleContent>
                         </Collapsible>
                     )}
-
+                    <Separator />
                     {/* UML Diagram */}
                     <div>
                         <div className="font-semibold mb-2">UML Diagram</div>
