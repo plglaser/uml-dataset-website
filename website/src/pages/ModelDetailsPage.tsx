@@ -11,19 +11,16 @@ export default function ModelDetails() {
     const { name } = useParams<{ name: string }>();
     const navigate = useNavigate();
     const [model, setModel] = useState<Model | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [descOpen, setDescOpen] = useState(false);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [descOpen, setDescOpen] = useState<boolean>(false);
     
     useEffect(() => {
-        let baseUrl = import.meta.env.BASE_URL;
-        //if (!baseUrl.endsWith("uml-dataset-website/")) {
-        //    baseUrl += "uml-dataset-website/";
-        //}
+        const baseUrl = import.meta.env.BASE_URL;
         fetch(`${baseUrl}models.json`)
             .then((res) => res.json())
             .then((data: Model[]) => {
                 const found = data.find(
-                (m) => m.name.toLowerCase() === decodeURIComponent(name ?? "").toLowerCase()
+                    (m) => m.name.toLowerCase() === decodeURIComponent(name ?? "").toLowerCase()
                 );
                 setModel(found || null);
                 setLoading(false);
@@ -31,22 +28,19 @@ export default function ModelDetails() {
             .catch(() => setLoading(false));
     }, [name]);
 
-
     if (loading) return <main className="p-8">Loading...</main>;
     if (!model) return (
         <main className="p-8 text-center">
-        <p className="mb-6">Model not found.</p>
-        <Button variant="outline" onClick={() => navigate(-1)}>
-            Back
-        </Button>
+            <p className="mb-6">Model not found.</p>
+            <Button variant="outline" onClick={() => navigate(-1)}>
+                Back
+            </Button>
         </main>
     );
-
     
     return (
-        
         <main className="w-full flex flex-col items-center py-10 px-2 text-left">
-            <div className="w-full max-w-5xl">
+            <div className="w-full max-w-4xl">
                 <Button variant="outline" className="mb-4" onClick={() => navigate(-1)}>
                     &larr; Back
                 </Button>

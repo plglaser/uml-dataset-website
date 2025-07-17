@@ -7,6 +7,7 @@ import AdmZip from 'adm-zip';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATASET_DIR = path.resolve(__dirname, '../../dataset');
+const PUBLIC_DIR = path.resolve(__dirname, '../public');
 const MODELS_DIR = path.resolve(__dirname, '../public/models');
 const OUTPUT_FILE = path.resolve(__dirname, '../public/models.json');
 
@@ -168,6 +169,20 @@ function zipModelFiles() {
     });
 }
 
+function zipAllModels() {
+    const zip = new AdmZip();
+    // Add each model folder and its contents to the root of the ZIP
+    fs.readdirSync(MODELS_DIR).forEach(modelName => {
+        const modelPath = path.join(MODELS_DIR, modelName);
+        if (fs.statSync(modelPath).isDirectory()) {
+            // The second argument ensures correct folder structure inside ZIP
+            zip.addLocalFolder(modelPath, modelName);
+        }
+    });
+    zip.writeZip(path.join(PUBLIC_DIR, 'models.zip'));
+    console.log(`Created ZIP of all models as ${path.join(MODELS_DIR, 'models.zip')}`);
+}
+
 // TODO: Add validation?
 function main() {
     if (!fs.existsSync(MODELS_DIR)) fs.mkdirSync(MODELS_DIR, { recursive: true });
@@ -188,6 +203,8 @@ function main() {
 
     zipModelFiles();
     console.log(`Zipped model files in ${MODELS_DIR}`);
+
+    zipAllModels();
 }
 
 main()
